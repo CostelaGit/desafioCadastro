@@ -1,16 +1,16 @@
 package dominio;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 public class menuInicial {
 
-    perguntas pInicial = new perguntas();
+    private perguntas pInicial = new perguntas();
 
     Scanner in = new Scanner(System.in);
 
+    int result = 0;
 
-    public String menuInicial = "1. Cadastrar um novo pet\n" +
+    private String  menuInicial = "1. Cadastrar um novo pet\n" +
             "2. Alterar os dados do pet cadastrado\n" +
             "3. Deletar um pet cadastrado\n" +
             "4. Listar todos os pets cadastrados\n" +
@@ -20,12 +20,14 @@ public class menuInicial {
 
     public int rMenuInicial() {
         int result = 0;
+
         System.out.println(menuInicial);
         System.out.println("\n !! Favor digite a Opção pretendida !!");
 
+
         while (true) {
             try {
-                result = Integer.parseInt(in.nextLine().trim());
+                result = Integer.parseInt(in.nextLine());
 
                 if (result >= 1 && result <= 6) {
                     break;
