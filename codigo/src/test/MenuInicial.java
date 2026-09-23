@@ -13,9 +13,26 @@ public class MenuInicial {
             System.out.println("digite a opção que você deseja: ");
             int op = sc.nextInt();
 
-            if ((op == 0) || (op < 0) || (op > 6)) {
-                // throw new IllegalArgumentException("Não é uma opção válida, por favor digite apenas as opções do menu");
-                System.out.println("\nNão é uma opção válida, por favor digite apenas as opções do menu\n");
+            switch (op) {
+                case 1:
+                    LeitorArquivo.LerTudo(args);
+                    break;
+                case 2:
+                    System.out.println("opcao 2");
+                    break;
+                case 3:
+                    System.out.println("opcao 3");
+                    break;
+                case 4:
+                    System.out.println("opcao 4");
+                    break;
+                case 5:
+                    System.out.println("opcao 5");
+                    break;
+                case 6:
+                    System.exit(0);
+                default:
+                    break;
             }
 
         }

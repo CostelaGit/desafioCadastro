@@ -3,7 +3,12 @@ import java.nio.file.Path;
 import java.nio.file.Files;
 
 public class LeitorArquivo{
-    public static void main(String []args){
+    
+    public void LerLinhaALinha(){
+
+    }
+    
+    public static void LerTudo(String []args){
         Path caminho = Path.of("formulario.txt");
     
         try {
@@ -15,4 +20,5 @@ public class LeitorArquivo{
     }
 
     }
+
 }
