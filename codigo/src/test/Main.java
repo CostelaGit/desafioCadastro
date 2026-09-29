@@ -80,9 +80,8 @@ public class Main {
                                 System.out.println(linha);
                                 Double idade = 0.0;
                                 String idadeDigitada = sc.nextLine().trim();
-                                sc.nextLine();
                                 try {
-                                    if (idadeDigitada.isBlank()) {
+                                    if (idadeDigitada.isEmpty()) {
                                         idade = 0.0;
                                         break;
                                     } if(!idadeDigitada.matches("\\d+(\\.\\d+)?")) {
@@ -104,13 +103,32 @@ public class Main {
                                 }
                             }
                             if (linha.contains("6 -")) {
-
+                                System.out.println(linha);
+                                String pesoDigitado = sc.nextLine().trim();
+                                try {
+                                    if (pesoDigitado.isEmpty()) {
+                                        pesoDigitado = "0.0";
+                                        break;
+                                    }
+                                    if (!pesoDigitado.matches("\\d+(\\.\\d+)?")) {
+                                        throw new IllegalArgumentException("Peso deve ser um número válido.");
+                                    }
+                                    Double peso = Double.parseDouble(pesoDigitado);
+                                    if (peso < 0.5 || peso > 60) {
+                                        throw new IllegalArgumentException("Peso não pode ser menor que 0.5 ou maior que 60kg.");
+                                    }
+                                } catch (IllegalArgumentException e) {
+                                    System.out.println(e.getMessage());
+                                }
                             }
                             if (linha.contains("7 -")) {
-
-                            }
-                            if (linha.contains("8 -")) {
-
+                                System.out.println(linha);
+                                String raca = sc.nextLine().trim();
+                                if (raca.isEmpty()) {
+                                    raca = NAO_INFORMADO;
+                                } if(!raca.matches("[A-Za-zÀ-ÿ ]+")) {
+                                    throw new IllegalArgumentException("A raça deve conter apenas letras e espaços.");
+                                }
                             }
                         }
                     } catch (IOException e) {
