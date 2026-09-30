@@ -9,4 +9,12 @@ public class endereco {
         this.Rua = Rua;
     }
 
+    @Override 
+    public String toString() {
+        return "endereco{" +
+                "NumeroDaCasa=" + NumeroDaCasa +
+                ", Cidade='" + Cidade + '\'' +
+                ", Rua='" + Rua + '\'' +
+                '}';
+    }
 }
