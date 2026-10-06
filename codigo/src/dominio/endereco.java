@@ -9,7 +9,19 @@ public class endereco {
         this.Rua = Rua;
     }
 
-    @Override 
+    public int getNumeroDaCasa() {
+        return NumeroDaCasa;
+    }
+
+    public String getCidade() {
+        return Cidade;
+    }
+
+    public String getRua() {
+        return Rua;
+    }
+
+    @Override
     public String toString() {
         return "endereco{" +
                 "NumeroDaCasa=" + NumeroDaCasa +

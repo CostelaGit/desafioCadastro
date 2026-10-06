@@ -1,12 +1,15 @@
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
 
         final String NAO_INFORMADO = "Não informado";
+        LocalDateTime time = LocalDateTime.now();
 
         Scanner sc = new Scanner(System.in);
 
@@ -31,6 +34,7 @@ public class Main {
                     float idade = 0;
                     float peso = 0;
                     String raca = NAO_INFORMADO;
+
                     try (BufferedReader br = new BufferedReader(new FileReader("formulario.txt"))) {
                         String linha;
                         while ((linha = br.readLine()) != null) {
@@ -101,6 +105,7 @@ public class Main {
                                     }
                                 } catch (IllegalArgumentException e) {
                                     System.out.println(e.getMessage());
+                                    break;
                                 }
                             }
                             if (linha.contains("6 -")) {
@@ -136,7 +141,43 @@ public class Main {
                     }
 
                     Pet pet = new Pet(nome, sexo, tipo, enderecoPet, idade, peso, raca);
-                    System.out.println(pet.toString());
+
+                    
+                    LocalDateTime tempoAtual = time;
+
+                    try {
+                        String tempoAtualFormatado = tempoAtual.format(DateTimeFormatter.ofPattern("yyyyddMM'T'HHmmss"));
+                        String nomeArquivo = tempoAtualFormatado + "-" + nome.replace(" ", "").toUpperCase() + ".txt";
+
+                        File pasta = new File("petsCadastrados");
+
+                        File arquivoDestino = new File(pasta, nomeArquivo);
+
+                        try (BufferedWriter br = new BufferedWriter(new FileWriter(arquivoDestino))){
+                            br.write("1 - " + nome);
+                            br.newLine();
+                            br.write("2 - " + tipo);
+                            br.newLine();
+                            br.write("3 - " + sexo);
+                            br.newLine();
+                            br.write("4 - " + enderecoPet.getRua().toUpperCase() + ", " + enderecoPet.getNumeroDaCasa() + ", " + enderecoPet.getCidade().toUpperCase());
+                            br.newLine();
+                            br.write("5 - " + idade + " anos");
+                            br.newLine();
+                            br.write("6 - " + peso + " KGs");
+                            br.newLine();
+                            br.write("7 - " + raca);
+                            br.newLine();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        System.out.println("Nome do arquivo: " + nomeArquivo);
+                    } catch (Exception e) {
+                        System.out.println("Erro ao formatar a data: " + e.getMessage());
+                    }
+
+
                     System.out.println("\nPet cadastrado com sucesso!\n");
                     break;
                 case 2:
