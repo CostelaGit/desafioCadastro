@@ -202,4 +202,36 @@ public class Main {
 
         }
     }
+
+    public static void Passo5() {
+        Scanner sc = new Scanner(System.in);
+        String segundoCriterio = null;
+        String valorCriterio = null;
+        
+                
+
+
+
+
+
+
+
+
+
+
+        System.out.println("Digite o critério de busca (Nome, Sexo, Idade, Peso, Raça, Endereço): ");
+        String criterio = sc.nextLine().trim().toLowerCase();
+        System.out.println("Deseja mais de um critério? (S/N): ");
+        String resposta = sc.nextLine().trim().toLowerCase();
+        
+        if (resposta == "s") {
+            System.out.println("Digite o segundo critério de busca (Nome, Sexo, Idade, Peso, Raça, Endereço): ");
+            segundoCriterio = sc.nextLine().trim().toLowerCase();
+    }   else {
+            System.out.println("Digite o valor do critério de busca: ");
+            valorCriterio = sc.nextLine().trim().toLowerCase();
+        }
+
+        
+    }
 }

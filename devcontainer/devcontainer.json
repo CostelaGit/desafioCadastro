@@ -1,0 +1,14 @@
+{
+  "name": "Meu Ambiente Java/Spring",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
+      ],
+      "settings": {
+        "github.copilot.chat.codeGeneration.useInstructionFiles": true
+      }
+    }
+  }
+}
