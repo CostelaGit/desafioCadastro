@@ -208,16 +208,20 @@ public class Main {
         String segundoCriterio = null;
         String valorCriterio = null;
         
-                
+        // Listar todos os arquivos na pasta "petsCadastrados"
 
+        File pasta = new File("petsCadastrados");
+        File[] arquivos = pasta.listFiles();
 
+        if (arquivos != null) {
+            for (File arquivo : arquivos) {
+                if (arquivo.isFile()) {
+                    System.out.println(arquivo.getName());
+                }
+            }
+        }
 
-
-
-
-
-
-
+        // Solicitar ao usuário o critério de busca
 
         System.out.println("Digite o critério de busca (Nome, Sexo, Idade, Peso, Raça, Endereço): ");
         String criterio = sc.nextLine().trim().toLowerCase();
