@@ -181,7 +181,7 @@ public class Main {
                     System.out.println("\nPet cadastrado com sucesso!\n");
                     break;
                 case 2:
-                    System.out.println("opcao 2");
+                    Passo5();
                     break;
                 case 3:
                     System.out.println("opcao 3");
@@ -190,7 +190,6 @@ public class Main {
                     System.out.println("opcao 4");
                     break;
                 case 5:
-                    System.out.println("opcao 5");
                     break;
                 case 6:
                     sc.close();
@@ -205,37 +204,225 @@ public class Main {
 
     public static void Passo5() {
         Scanner sc = new Scanner(System.in);
-        String segundoCriterio = null;
-        String valorCriterio = null;
-        
-        // Listar todos os arquivos na pasta "petsCadastrados"
-
         File pasta = new File("petsCadastrados");
-        File[] arquivos = pasta.listFiles();
 
-        if (arquivos != null) {
-            for (File arquivo : arquivos) {
-                if (arquivo.isFile()) {
-                    System.out.println(arquivo.getName());
+        if (!pasta.exists() || !pasta.isDirectory()) {
+            System.out.println("Nenhum pet cadastrado foi encontrado.");
+            return;
+        }
+
+        File[] arquivos = pasta.listFiles();
+        if (arquivos == null || arquivos.length == 0) {
+            System.out.println("Nenhum pet cadastrado foi encontrado.");
+            return;
+        }
+
+        System.out.println("\n=== Busca de pets cadastrados ===");
+        System.out.println("1 - CACHORRO");
+        System.out.println("2 - GATO");
+        System.out.println("3 - TODOS");
+        System.out.print("Escolha o tipo do animal: ");
+
+        String tipoBusca = null;
+        String escolhaTipo = sc.nextLine().trim();
+
+        switch (escolhaTipo) {
+            case "1":
+                tipoBusca = "CACHORRO";
+                break;
+            case "2":
+                tipoBusca = "GATO";
+                break;
+            case "3":
+                tipoBusca = "TODOS";
+                break;
+            default:
+                System.out.println("Tipo inválido. Use 1, 2 ou 3.");
+                return;
+        }
+
+        String criterioExtra = null;
+        String valorExtra = null;
+
+        System.out.print("Deseja filtrar por mais um critério? (S/N): ");
+        String resposta = sc.nextLine().trim().toLowerCase();
+
+        if (resposta.equals("s")) {
+            System.out.println("\nCritérios disponíveis:");
+            System.out.println("1 - Nome");
+            System.out.println("2 - Sexo");
+            System.out.println("3 - Idade");
+            System.out.println("4 - Peso");
+            System.out.println("5 - Raça");
+            System.out.println("6 - Endereço");
+            System.out.print("Escolha o critério: ");
+
+            String criterioDigitado = sc.nextLine().trim();
+            switch (criterioDigitado) {
+                case "1":
+                    criterioExtra = "nome";
+                    break;
+                case "2":
+                    criterioExtra = "sexo";
+                    break;
+                case "3":
+                    criterioExtra = "idade";
+                    break;
+                case "4":
+                    criterioExtra = "peso";
+                    break;
+                case "5":
+                    criterioExtra = "raca";
+                    break;
+                case "6":
+                    criterioExtra = "endereco";
+                    break;
+                default:
+                    System.out.println("Critério inválido.");
+                    return;
+            }
+
+            System.out.print("Digite o valor para o critério: ");
+            valorExtra = sc.nextLine().trim();
+        }
+
+        int contador = 0;
+        for (File arquivo : arquivos) {
+            if (!arquivo.isFile()) {
+                continue;
+            }
+
+            try {
+                java.util.Map<String, String> dados = lerDadosPet(arquivo);
+
+                String tipoPet = dados.getOrDefault("tipo", "");
+                if (!tipoBusca.equals("TODOS") && !normalizar(tipoPet).equals(normalizar(tipoBusca))) {
+                    continue;
+                }
+
+                boolean atendeCriteroExtra = true;
+                if (criterioExtra != null && !valorExtra.isEmpty()) {
+                    atendeCriteroExtra = atenderCriterio(dados, criterioExtra, valorExtra);
+                }
+
+                if (!atendeCriteroExtra) {
+                    continue;
+                }
+
+                contador++;
+                System.out.println(contador + ". " + formatarResumoPet(dados));
+            } catch (IOException e) {
+                System.out.println("Erro ao ler o arquivo " + arquivo.getName() + ": " + e.getMessage());
+            }
+        }
+
+        if (contador == 0) {
+            System.out.println("Nenhum pet encontrado com os critérios informados.");
+        }
+    }
+
+    private static java.util.Map<String, String> lerDadosPet(File arquivo) throws IOException {
+        java.util.Map<String, String> dados = new java.util.HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                int posicaoSeparador = linha.indexOf(" - ");
+                if (posicaoSeparador <= 0) {
+                    continue;
+                }
+
+                String chave = linha.substring(0, posicaoSeparador).trim();
+                String valor = linha.substring(posicaoSeparador + 3).trim();
+
+                switch (chave) {
+                    case "1":
+                        dados.put("nome", valor);
+                        break;
+                    case "2":
+                        dados.put("tipo", valor);
+                        break;
+                    case "3":
+                        dados.put("sexo", valor);
+                        break;
+                    case "4":
+                        dados.put("endereco", valor);
+                        break;
+                    case "5":
+                        dados.put("idade", valor);
+                        break;
+                    case "6":
+                        dados.put("peso", valor);
+                        break;
+                    case "7":
+                        dados.put("raca", valor);
+                        break;
+                    default:
+                        break;
                 }
             }
         }
 
-        // Solicitar ao usuário o critério de busca
+        return dados;
+    }
 
-        System.out.println("Digite o critério de busca (Nome, Sexo, Idade, Peso, Raça, Endereço): ");
-        String criterio = sc.nextLine().trim().toLowerCase();
-        System.out.println("Deseja mais de um critério? (S/N): ");
-        String resposta = sc.nextLine().trim().toLowerCase();
-        
-        if (resposta == "s") {
-            System.out.println("Digite o segundo critério de busca (Nome, Sexo, Idade, Peso, Raça, Endereço): ");
-            segundoCriterio = sc.nextLine().trim().toLowerCase();
-    }   else {
-            System.out.println("Digite o valor do critério de busca: ");
-            valorCriterio = sc.nextLine().trim().toLowerCase();
+    private static String formatarResumoPet(java.util.Map<String, String> dados) {
+        String nome = dados.getOrDefault("nome", "Não informado");
+        String tipo = dados.getOrDefault("tipo", "Não informado");
+        String sexo = dados.getOrDefault("sexo", "Não informado");
+        String endereco = dados.getOrDefault("endereco", "Não informado");
+        String idade = dados.getOrDefault("idade", "Não informado");
+        String peso = dados.getOrDefault("peso", "Não informado");
+        String raca = dados.getOrDefault("raca", "Não informado");
+
+        return nome + " - " + tipo + " - " + sexo + " - " + endereco + " - " + idade + " - " + peso + " - " + raca;
+    }
+
+    private static boolean atenderCriterio(java.util.Map<String, String> dados, String criterio, String valor) {
+        String valorPesquisa = normalizar(valor);
+
+        switch (criterio) {
+            case "nome":
+                return normalizar(dados.getOrDefault("nome", "")).contains(valorPesquisa);
+            case "sexo":
+                return normalizar(dados.getOrDefault("sexo", "")).contains(valorPesquisa);
+            case "idade":
+                return compararNumero(dados.getOrDefault("idade", "0"), valorPesquisa);
+            case "peso":
+                return compararNumero(dados.getOrDefault("peso", "0"), valorPesquisa);
+            case "raca":
+                return normalizar(dados.getOrDefault("raca", "")).contains(valorPesquisa);
+            case "endereco":
+                return normalizar(dados.getOrDefault("endereco", "")).contains(valorPesquisa);
+            default:
+                return false;
+        }
+    }
+
+    private static boolean compararNumero(String valorArquivo, String valorPesquisa) {
+        try {
+            String numeroArquivo = valorArquivo.replaceAll("[^0-9,\\.]", "").replace(',', '.');
+            String numeroPesquisa = valorPesquisa.replaceAll("[^0-9,\\.]", "").replace(',', '.');
+
+            if (numeroArquivo.isEmpty() || numeroPesquisa.isEmpty()) {
+                return false;
+            }
+
+            float valorArquivoFloat = Float.parseFloat(numeroArquivo);
+            float valorPesquisaFloat = Float.parseFloat(numeroPesquisa);
+            return valorArquivoFloat == valorPesquisaFloat;
+        } catch (NumberFormatException e) {
+            return normalizar(valorArquivo).contains(valorPesquisa);
+        }
+    }
+
+    private static String normalizar(String texto) {
+        if (texto == null) {
+            return "";
         }
 
-        
+        String semAcentos = java.text.Normalizer.normalize(texto, java.text.Normalizer.Form.NFD);
+        semAcentos = semAcentos.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return semAcentos.toLowerCase(java.util.Locale.ROOT);
     }
 }
